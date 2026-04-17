@@ -5,11 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "vite --mode docker",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup-db": "node --env-file=.env setup-db.mjs",
+    "seed": "node --env-file=.env seed.mjs",
+    "seed:local": "node --env-file=.env.docker seed.mjs",
+    "local:start": "npx supabase start",
+    "local:stop": "npx supabase stop",
+    "local:reset": "npx supabase db reset"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -24,6 +32,8 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "pg": "^8.20.0",
+    "supabase": "^2.92.0",
     "vite": "^7.3.1"
   }
 }

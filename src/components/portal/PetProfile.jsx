@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Syringe, FileText, Weight } from 'lucide-react';
-import { getPetById, savePet } from '../../utils/mockDb';
+import { getPetById, savePet } from '../../utils/db';
 import Button from '../ui/Button';
 import './Portal.css';
 
 const PetProfile = () => {
     const { id } = useParams();
-    const pet = React.useMemo(() => getPetById(id), [id]);
+    const [pet, setPet] = useState(null);
+
+    useEffect(() => {
+        getPetById(id).then(setPet);
+    }, [id]);
 
     // Modal state
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [editName, setEditName] = useState(() => pet?.name || '');
-    const [editImage, setEditImage] = useState(() => pet?.image || '');
+    const [editName, setEditName] = useState('');
+    const [editImage, setEditImage] = useState('');
 
     useEffect(() => {
         if (pet) {
@@ -32,10 +36,10 @@ const PetProfile = () => {
         }
     };
 
-    const handleEditSubmit = (e) => {
+    const handleEditSubmit = async (e) => {
         e.preventDefault();
         const updatedPet = { ...pet, name: editName, image: editImage };
-        savePet(updatedPet);
+        await savePet(updatedPet);
         setPet(updatedPet);
         setIsEditModalOpen(false);
     };

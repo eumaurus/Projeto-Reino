@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Search, Trash2, Key, User, PawPrint, Edit, Calendar, Plus, X, ChevronRight, ShieldQuestion, Stethoscope, ClipboardList } from 'lucide-react';
 import Button from '../ui/Button';
 import Toast from '../ui/Toast';
 import { useAuth } from '../../context/AuthContext';
-import { getDbUsers, getDbPets, getPetsByOwnerId, deleteUser, updateUserPassword, savePet } from '../../utils/mockDb';
+import { supabase } from '../../utils/supabaseClient';
+import { getDbUsers, getDbPets, getPetsByOwnerId, deleteUser, updateUserPassword, savePet } from '../../utils/db';
 import './AdminPanel.css';
 
 const generatePetCode = () => Math.floor(10000 + Math.random() * 90000).toString();
@@ -41,7 +42,10 @@ const AdminPanel = () => {
     const isVet = currentUser?.role === 'vet';
 
     const [activeTab, setActiveTab] = useState(isVet ? 'consultation' : (isAdmin ? 'admin' : 'clients'));
-    const [users, setUsers] = useState(() => getDbUsers());
+    const [users, setUsers] = useState([]);
+    const [petCounts, setPetCounts] = useState({});
+    const [tutorPets, setTutorPets] = useState([]);
+    const [consultationPets, setConsultationPets] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [notification, setNotification] = useState(null);
 
@@ -75,36 +79,55 @@ const AdminPanel = () => {
     const [selectedPetForVac, setSelectedPetForVac] = useState(null);
     const [selectedVacIds, setSelectedVacIds] = useState([]);
 
-    const loadData = () => {
-        setUsers(getDbUsers());
+    useEffect(() => { loadData(); }, []);
+
+    useEffect(() => {
+        if (!selectedTutorId) { setTutorPets([]); return; }
+        getPetsByOwnerId(selectedTutorId).then(setTutorPets);
+    }, [selectedTutorId]);
+
+    useEffect(() => {
+        if (!consultationTutorId) { setConsultationPets([]); return; }
+        getPetsByOwnerId(consultationTutorId).then(setConsultationPets);
+    }, [consultationTutorId]);
+
+    const loadData = async () => {
+        const allUsers = await getDbUsers();
+        setUsers(allUsers);
+        const allPets = await getDbPets();
+        const counts = {};
+        allPets.forEach(p => { counts[p.ownerId] = (counts[p.ownerId] || 0) + 1; });
+        setPetCounts(counts);
     };
 
     const selectedTutor = users.find(u => u.id === selectedTutorId);
 
-    const handleDeleteUser = (userId, name) => {
+    const handleDeleteUser = async (userId, name) => {
         if (window.confirm(`Tem certeza que deseja excluir o perfil de ${name}? Todos os seus pets também serão removidos.`)) {
-            deleteUser(userId);
-            loadData();
+            await deleteUser(userId);
+            await loadData();
             setNotification({ message: 'Perfil e dependências excluídos com sucesso.', type: 'success' });
         }
     };
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (newPassword.length < 4) {
             setNotification({ message: 'A senha deve ter pelo menos 4 caracteres.', type: 'error' });
             return;
         }
-        const result = updateUserPassword(selectedUser.id, newPassword);
+        const result = await updateUserPassword(selectedUser.id, newPassword);
         if (result.success) {
-            setNotification({ message: `Senha de ${selectedUser.name} alterada com sucesso.`, type: 'success' });
+            setNotification({ message: `Senha alterada com sucesso.`, type: 'success' });
             setIsPasswordModalOpen(false);
             setNewPassword('');
             setSelectedUser(null);
+        } else {
+            setNotification({ message: result.message || 'Erro ao alterar senha.', type: 'error' });
         }
     };
 
-    const handleCreatePet = (e) => {
+    const handleCreatePet = async (e) => {
         e.preventDefault();
         const petCode = generatePetCode();
         const newPet = {
@@ -121,32 +144,29 @@ const AdminPanel = () => {
             upcomingAppointments: [],
             vaccines: []
         };
-        savePet(newPet);
-        loadData();
-        setNotification({
-            message: `Pet ${petData.name} criado! Código: ${petCode} `,
-            type: 'success'
-        });
+        await savePet(newPet);
+        await loadData();
+        setNotification({ message: `Pet ${petData.name} criado! Código: ${petCode}`, type: 'success' });
         setIsPetModalOpen(false);
         setPetData({ name: '', species: 'Cachorro', breed: '', age: '', weight: '', notes: '' });
     };
 
-    const handleUpdatePet = (e) => {
+    const handleUpdatePet = async (e) => {
         e.preventDefault();
-        savePet(editingPet);
-        loadData();
+        await savePet(editingPet);
+        await loadData();
         setNotification({ message: `Dados de ${editingPet.name} atualizados com sucesso!`, type: 'success' });
         setIsEditPetModalOpen(false);
         setEditingPet(null);
     };
 
-    const handleDeletePet = (petId, petName) => {
+    const handleDeletePet = async (petId, petName) => {
         if (window.confirm(`Tem certeza que deseja excluir o cadastro de ${petName}? Esta ação não pode ser desfeita.`)) {
-            const allPets = getDbPets();
-            const updatedPets = allPets.filter(p => p.id !== petId);
-            localStorage.setItem('db_pets', JSON.stringify(updatedPets));
-            loadData();
-            setNotification({ message: `${petName} removido do sistema.`, type: 'info' });
+            const { error } = await supabase.from('pets').delete().eq('id', petId);
+            if (!error) {
+                await loadData();
+                setNotification({ message: `${petName} removido do sistema.`, type: 'info' });
+            }
         }
     };
 
@@ -156,7 +176,7 @@ const AdminPanel = () => {
         setIsVaccineModalOpen(true);
     };
 
-    const confirmVaccines = () => {
+    const confirmVaccines = async () => {
         if (selectedVacIds.length === 0) return;
 
         const petSpecies = selectedPetForVac.species === 'Gato' ? 'Gato' : 'Cachorro';
@@ -169,14 +189,12 @@ const AdminPanel = () => {
 
         const newVaccines = selectedVacIds.map(id => {
             const vacTemplate = availableVacs.find(v => v.id === id);
-            // Special case for Lepto (semi-annual)
             let nextDue = defaultNextDue;
             if (id === 'lepto') {
                 const nextSixMo = new Date();
                 nextSixMo.setMonth(nextSixMo.getMonth() + 6);
                 nextDue = nextSixMo.toLocaleDateString('pt-BR');
             }
-
             return {
                 name: vacTemplate.name,
                 date: dateString,
@@ -191,8 +209,8 @@ const AdminPanel = () => {
             vaccines: [...newVaccines, ...(selectedPetForVac.vaccines || [])]
         };
 
-        savePet(updatedPet);
-        loadData();
+        await savePet(updatedPet);
+        await loadData();
         setNotification({ message: `${selectedVacIds.length} vacina(s) registrada(s) com sucesso!`, type: 'success' });
         setIsVaccineModalOpen(false);
         setSelectedPetForVac(null);
@@ -216,8 +234,6 @@ const AdminPanel = () => {
 
     const renderTutorDetail = () => {
         if (!selectedTutor) return null;
-
-        const tutorPets = getPetsByOwnerId(selectedTutor.id);
 
         return (
             <div className="tutor-detail-view">
@@ -356,7 +372,7 @@ const AdminPanel = () => {
                             </div>
                         </div>
                         <div className="tutor-card-stats">
-                            <span>{getPetsByOwnerId(u.id).length} pet(s)</span>
+                            <span>{petCounts[u.id] || 0} pet(s)</span>
                             <ChevronRight size={18} />
                         </div>
                     </div>
@@ -374,7 +390,7 @@ const AdminPanel = () => {
     const renderConsultationTab = () => {
         // Step 3: Form
         if (consultationPetId) {
-            const pet = getDbPets().find(p => p.id === consultationPetId);
+            const pet = consultationPets.find(p => p.id === consultationPetId);
             const tutor = users.find(u => u.id === consultationTutorId);
 
             return (
@@ -445,7 +461,6 @@ const AdminPanel = () => {
         // Step 2: Select Pet
         if (consultationTutorId) {
             const tutor = users.find(u => u.id === consultationTutorId);
-            const tutorPets = getPetsByOwnerId(consultationTutorId);
 
             return (
                 <div className="consultation-step-view animate-fade-in visible">
@@ -458,7 +473,7 @@ const AdminPanel = () => {
                     </div>
 
                     <div className="consultation-pet-grid">
-                        {tutorPets.map(pet => (
+                        {consultationPets.map(pet => (
                             <div key={pet.id} className="consultation-selection-card" onClick={() => setConsultationPetId(pet.id)}>
                                 <div className="card-img">
                                     <img src={pet.image} alt={pet.name} />

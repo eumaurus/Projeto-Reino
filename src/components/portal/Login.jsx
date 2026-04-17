@@ -10,14 +10,18 @@ const Login = () => {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
-        const result = login(identifier, password);
+        const result = await login(identifier, password);
+        setLoading(false);
+
         if (result.success) {
             navigate('/dashboard');
         } else {
@@ -73,8 +77,8 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <Button type="submit" className="auth-submit-btn">
-                        Entrar
+                    <Button type="submit" className="auth-submit-btn" disabled={loading}>
+                        {loading ? 'Entrando...' : 'Entrar'}
                     </Button>
                 </form>
 
