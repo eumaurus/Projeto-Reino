@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PawPrint, Lock, Mail, User, Phone, AlertCircle, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
-import { registerUser } from '../../utils/mockDb';
+import { registerUser } from '../../utils/db';
 import { maskDocument, maskPhone } from '../../utils/maskUtils';
 import './Auth.css';
 
@@ -14,13 +14,16 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
-        const result = registerUser({ name, document, email, phone, password });
+        const result = await registerUser({ name, document, email, phone, password });
+        setLoading(false);
 
         if (result.success) {
             setSuccess(true);
@@ -137,8 +140,8 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <Button type="submit" className="auth-submit-btn">
-                        Cadastrar Conta
+                    <Button type="submit" className="auth-submit-btn" disabled={loading}>
+                        {loading ? 'Cadastrando...' : 'Cadastrar Conta'}
                     </Button>
                 </form>
 

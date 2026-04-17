@@ -4,37 +4,36 @@ import { Plus, Calendar, ShieldCheck, User } from 'lucide-react';
 import Button from '../ui/Button';
 import Toast from '../ui/Toast';
 import { useAuth } from '../../context/AuthContext';
-import { getPetsByOwnerId, savePet, getPetById } from '../../utils/mockDb';
+import { getPetsByOwnerId, savePet, getPetById } from '../../utils/db';
 import './Portal.css';
 
 const Dashboard = () => {
     const { currentUser } = useAuth();
     const isClient = currentUser?.role === 'client';
 
-    const [pets, setPets] = useState(() => {
-        if (currentUser && isClient) {
-            return getPetsByOwnerId(currentUser.id);
-        }
-        return [];
-    });
+    const [pets, setPets] = useState([]);
+
+    useEffect(() => {
+        if (!currentUser || !isClient) return;
+        getPetsByOwnerId(currentUser.id).then(setPets);
+    }, [currentUser?.id]);
 
     const [isAddPetModalOpen, setIsAddPetModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [petCodeInput, setPetCodeInput] = useState('');
     const [notification, setNotification] = useState(null);
 
-    const handleAddPetSubmit = (e) => {
+    const handleAddPetSubmit = async (e) => {
         e.preventDefault();
         const code = petCodeInput.trim();
         if (code.length >= 3) {
-            const existingPet = getPetById(code);
+            const existingPet = await getPetById(code);
 
             if (existingPet) {
-                const linkedPet = { ...existingPet, ownerId: currentUser.id };
-                savePet(linkedPet);
+                await savePet({ ...existingPet, ownerId: currentUser.id });
                 setNotification({ message: `Perfil de ${existingPet.name} vinculado com sucesso!`, type: 'success' });
             } else {
-                const newPet = {
+                await savePet({
                     id: code,
                     ownerId: currentUser.id,
                     name: `Pet Vinculado (${code})`,
@@ -45,12 +44,12 @@ const Dashboard = () => {
                     nextVaccine: 'Consultar clínica',
                     upcomingAppointments: [],
                     vaccines: []
-                };
-                savePet(newPet);
+                });
                 setNotification({ message: "Novo perfil do pet criado e vinculado com sucesso!", type: 'success' });
             }
 
-            setPets(getPetsByOwnerId(currentUser.id));
+            const updated = await getPetsByOwnerId(currentUser.id);
+            setPets(updated);
             setIsAddPetModalOpen(false);
             setPetCodeInput('');
         } else {
