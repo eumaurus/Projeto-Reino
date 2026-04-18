@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* ─── Brand ─────────────────────────────────────────────────── */
+    --brand-primary:         #73c6e8;
+    --brand-primary-hover:   #5cbde5;
+    --brand-primary-soft:    #e6f4fb;
+    --brand-primary-softer:  #f2f9fd;
+    --brand-secondary:       #505273;
+    --brand-secondary-hover: #3e405a;
+    --brand-secondary-soft:  #eceef5;
+    --brand-accent:          #f59e0b;
+
+    /* ─── Neutrals ─────────────────────────────────────────────── */
+    --c-white:   #ffffff;
+    --c-gray-50:  #f8fafc;
+    --c-gray-100: #f1f5f9;
+    --c-gray-200: #e2e8f0;
+    --c-gray-300: #cbd5e1;
+    --c-gray-400: #94a3b8;
+    --c-gray-500: #64748b;
+    --c-gray-600: #475569;
+    --c-gray-700: #334155;
+    --c-gray-800: #1e293b;
+    --c-gray-900: #0f172a;
+
+    /* ─── Semantic ─────────────────────────────────────────────── */
+    --c-success:     #10b981;
+    --c-success-soft:#dcfce7;
+    --c-warning:     #f59e0b;
+    --c-warning-soft:#fef3c7;
+    --c-danger:      #ef4444;
+    --c-danger-soft: #fee2e2;
+    --c-info:        #3b82f6;
+    --c-info-soft:   #dbeafe;
+
+    /* ─── Typography ───────────────────────────────────────────── */
+    --font-heading: 'Outfit', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+
+    --fs-xs:   0.75rem;
+    --fs-sm:   0.875rem;
+    --fs-base: 1rem;
+    --fs-md:   1.0625rem;
+    --fs-lg:   1.25rem;
+    --fs-xl:   1.5rem;
+    --fs-2xl:  1.875rem;
+    --fs-3xl:  2.25rem;
+    --fs-4xl:  3rem;
+
+    --lh-tight:  1.15;
+    --lh-snug:   1.3;
+    --lh-normal: 1.55;
+    --lh-relaxed:1.75;
+
+    /* ─── Spacing scale ────────────────────────────────────────── */
+    --s-0: 0;
+    --s-1: 0.25rem;
+    --s-2: 0.5rem;
+    --s-3: 0.75rem;
+    --s-4: 1rem;
+    --s-5: 1.25rem;
+    --s-6: 1.5rem;
+    --s-8: 2rem;
+    --s-10: 2.5rem;
+    --s-12: 3rem;
+    --s-16: 4rem;
+    --s-20: 5rem;
+    --s-24: 6rem;
+
+    /* ─── Radius ───────────────────────────────────────────────── */
+    --r-sm:   6px;
+    --r-md:   10px;
+    --r-lg:   14px;
+    --r-xl:   20px;
+    --r-2xl:  28px;
+    --r-full: 9999px;
+
+    /* ─── Shadow ───────────────────────────────────────────────── */
+    --sh-xs:  0 1px 2px rgb(15 23 42 / 0.05);
+    --sh-sm:  0 1px 3px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.04);
+    --sh-md:  0 4px 10px rgb(15 23 42 / 0.06), 0 2px 4px rgb(15 23 42 / 0.04);
+    --sh-lg:  0 10px 24px rgb(15 23 42 / 0.08), 0 4px 10px rgb(15 23 42 / 0.04);
+    --sh-xl:  0 20px 48px rgb(15 23 42 / 0.12);
+    --sh-brand: 0 8px 24px rgb(115 198 232 / 0.35);
+
+    /* ─── Layout ───────────────────────────────────────────────── */
+    --container-w: 1200px;
+    --container-p: clamp(1rem, 3vw, 2rem);
+    --nav-h: 72px;
+    --sidebar-w: 240px;
+
+    /* ─── Motion ───────────────────────────────────────────────── */
+    --t-fast:   150ms cubic-bezier(.4,0,.2,1);
+    --t-normal: 220ms cubic-bezier(.4,0,.2,1);
+    --t-slow:   360ms cubic-bezier(.4,0,.2,1);
+
+    /* ─── Z-index ──────────────────────────────────────────────── */
+    --z-dropdown: 100;
+    --z-sticky:   200;
+    --z-overlay:  900;
+    --z-modal:    1000;
+    --z-toast:    1100;
+}
+
+html[data-theme="dark"] {
+    --brand-primary-soft:   rgba(115, 198, 232, 0.16);
+    --brand-primary-softer: rgba(115, 198, 232, 0.08);
+    --brand-secondary:       #cbd5e1;
+    --brand-secondary-hover: #e2e8f0;
+    --brand-secondary-soft:  rgba(203, 213, 225, 0.1);
+
+    --c-white:   #0f172a;
+    --c-gray-50:  #1e293b;
+    --c-gray-100: #252f3f;
+    --c-gray-200: #334155;
+    --c-gray-300: #475569;
+    --c-gray-400: #64748b;
+    --c-gray-500: #94a3b8;
+    --c-gray-600: #cbd5e1;
+    --c-gray-700: #e2e8f0;
+    --c-gray-800: #f1f5f9;
+    --c-gray-900: #f8fafc;
+
+    --c-success-soft: rgba(16, 185, 129, 0.18);
+    --c-warning-soft: rgba(245, 158, 11, 0.18);
+    --c-danger-soft:  rgba(239, 68, 68, 0.18);
+    --c-info-soft:    rgba(59, 130, 246, 0.18);
+
+    --sh-xs:  0 1px 2px rgba(0,0,0,0.35);
+    --sh-sm:  0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
+    --sh-md:  0 4px 10px rgba(0,0,0,0.4);
+    --sh-lg:  0 10px 24px rgba(0,0,0,0.45);
+    --sh-xl:  0 20px 48px rgba(0,0,0,0.55);
+    --sh-brand: 0 8px 24px rgba(115, 198, 232, 0.25);
+}
+
+html[data-theme="dark"] body {
+    background: #0b1220;
+    color: #e2e8f0;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+    color: #f1f5f9;
+}

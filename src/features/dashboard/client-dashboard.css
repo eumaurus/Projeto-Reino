@@ -1,0 +1,206 @@
+.dash-hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 140%);
+    border-radius: var(--r-2xl);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    color: white;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.dash-hero::before {
+    content: '';
+    position: absolute;
+    right: -120px; top: -120px;
+    width: 360px; height: 360px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+}
+.dash-hero::after {
+    content: '';
+    position: absolute;
+    left: 15%; bottom: -180px;
+    width: 280px; height: 280px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+}
+.dash-hero-left { position: relative; z-index: 1; }
+.dash-hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255,255,255,0.18);
+    border-radius: var(--r-full);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(6px);
+}
+.dash-hero h1 {
+    color: white;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+.dash-hero p {
+    color: rgba(255,255,255,0.88);
+    max-width: 560px;
+    font-size: var(--fs-md);
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+}
+.dash-hero-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+.dash-hero-actions .btn-primary {
+    background: white;
+    color: var(--brand-secondary);
+    box-shadow: 0 8px 24px rgba(15,23,42,0.2);
+}
+.dash-hero-actions .btn-primary:hover { background: rgba(255,255,255,0.92); color: var(--brand-secondary); }
+.dash-hero-actions .btn-outline {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border-color: rgba(255,255,255,0.35);
+}
+.dash-hero-actions .btn-outline:hover {
+    background: rgba(255,255,255,0.22);
+    border-color: white;
+    color: white;
+}
+
+.dash-hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+    align-self: center;
+}
+.dash-hero-shortcut {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255,255,255,0.14);
+    border-radius: var(--r-lg);
+    color: white;
+    backdrop-filter: blur(6px);
+    transition: background var(--t-fast), transform var(--t-fast);
+}
+.dash-hero-shortcut:hover {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-1px);
+}
+.dash-hero-shortcut-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.dash-hero-shortcut strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    color: white;
+}
+.dash-hero-shortcut span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.72);
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.dash-vaccine-alerts {
+    background: var(--c-warning-soft);
+    border: 1px solid #fde68a;
+    border-radius: var(--r-xl);
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 2rem;
+}
+.vaccine-alert {
+    background: white;
+    border-radius: var(--r-md);
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border: 1px solid var(--c-gray-100);
+}
+.vaccine-alert strong { color: var(--brand-secondary); }
+.vaccine-alert span { color: var(--c-gray-500); font-size: var(--fs-sm); }
+.vaccine-alert-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--c-warning-soft);
+    color: #92400e;
+    flex-shrink: 0;
+}
+.vaccine-alert.overdue { border-color: #fecaca; }
+.vaccine-alert-icon.overdue { background: var(--c-danger-soft); color: #b91c1c; }
+
+.booking-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    background: white;
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    transition: box-shadow var(--t-fast), transform var(--t-fast);
+}
+.booking-line:hover { box-shadow: var(--sh-md); transform: translateY(-1px); }
+.booking-line-date {
+    padding: 0.5rem 0.75rem;
+    background: var(--brand-primary-soft);
+    border-radius: var(--r-md);
+    text-align: center;
+    min-width: 92px;
+}
+.booking-line-date strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-weight: 700;
+    font-size: 13px;
+}
+.booking-line-date span {
+    display: block;
+    color: var(--brand-primary);
+    font-size: 12px;
+    font-weight: 600;
+}
+.booking-line-body { flex: 1; min-width: 0; }
+.booking-line-body strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+    margin-bottom: 2px;
+}
+.booking-line-body span {
+    font-size: var(--fs-sm);
+    color: var(--c-gray-500);
+}
+
+@media (max-width: 900px) {
+    .dash-hero { grid-template-columns: 1fr; }
+}

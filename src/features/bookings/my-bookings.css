@@ -1,0 +1,86 @@
+.booking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.booking-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    transition: box-shadow var(--t-fast), transform var(--t-fast);
+    flex-wrap: wrap;
+}
+.booking-row:hover {
+    box-shadow: var(--sh-sm);
+    transform: translateY(-1px);
+}
+.booking-row-date {
+    padding: 0.6rem 0.85rem;
+    background: var(--brand-primary-soft);
+    border-radius: var(--r-md);
+    text-align: center;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+.booking-row-date strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-weight: 700;
+    font-size: 14px;
+}
+.booking-row-date span {
+    display: block;
+    color: var(--brand-primary);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+.booking-row-main {
+    flex: 1;
+    min-width: 240px;
+}
+.booking-row-head {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.3rem;
+    flex-wrap: wrap;
+}
+.booking-row-head strong {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+}
+.booking-row-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    color: var(--c-gray-500);
+    font-size: 13px;
+}
+.booking-row-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.booking-row-notes {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--c-gray-50);
+    border-left: 3px solid var(--brand-primary);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--c-gray-600);
+    font-style: italic;
+}
+.booking-row-cancel {
+    margin-top: 0.5rem;
+    font-size: 12px;
+    color: var(--c-danger);
+}
+.booking-row-actions { flex-shrink: 0; }

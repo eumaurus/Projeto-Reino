@@ -1,0 +1,151 @@
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+@media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+
+.chart-card {
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-xl);
+    padding: 1.25rem;
+}
+.chart-card-header {
+    margin-bottom: 0.75rem;
+}
+.chart-card-header strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+}
+.chart-card-header span {
+    color: var(--c-gray-500);
+    font-size: 12px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+@media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+
+.admin-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.4rem;
+    height: 220px;
+    padding: 1rem 1rem 0;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+}
+.admin-chart-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    min-width: 28px;
+}
+.admin-chart-bar {
+    flex: 0 1 auto;
+    width: 100%;
+    background: linear-gradient(to top, var(--brand-primary), var(--brand-primary-hover));
+    border-radius: 6px 6px 0 0;
+    min-height: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    color: var(--brand-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    padding-top: 4px;
+    transition: background var(--t-fast);
+    position: relative;
+}
+.admin-chart-bar span { line-height: 1; }
+.admin-chart-label {
+    font-size: 10px;
+    color: var(--c-gray-500);
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ─── Clients list ───────────────────────────────────────── */
+.client-row {
+    display: grid;
+    grid-template-columns: 44px 1fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    transition: border-color var(--t-fast), transform var(--t-fast);
+    cursor: pointer;
+}
+.client-row:hover {
+    border-color: var(--brand-primary);
+    transform: translateY(-1px);
+}
+.client-row strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+}
+.client-row span {
+    display: block;
+    font-size: 13px;
+    color: var(--c-gray-500);
+}
+@media (max-width: 700px) {
+    .client-row { grid-template-columns: 44px 1fr auto; }
+    .client-row > *:nth-child(3), .client-row > *:nth-child(4) { display: none; }
+}
+
+/* ─── Service catalog card ───────────────────────────────── */
+.service-row {
+    display: grid;
+    grid-template-columns: 52px 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    margin-bottom: 0.6rem;
+}
+.service-row > div:first-child {
+    width: 52px; height: 52px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+    border-radius: var(--r-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.service-row strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+    margin-bottom: 2px;
+}
+.service-row span { font-size: 13px; color: var(--c-gray-500); }
+.service-row small {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 3px 10px;
+    background: var(--c-gray-50);
+    border-radius: var(--r-full);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--c-gray-600);
+}
