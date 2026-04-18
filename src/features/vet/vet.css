@@ -1,0 +1,324 @@
+.vet-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+@media (max-width: 900px) { .vet-grid { grid-template-columns: 1fr; } }
+
+.vet-appointment {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    transition: all var(--t-fast);
+}
+.vet-appointment:hover { border-color: var(--brand-primary); transform: translateY(-1px); box-shadow: var(--sh-sm); }
+.vet-appointment-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.6rem;
+    background: var(--brand-primary-soft);
+    border-radius: var(--r-md);
+    min-width: 72px;
+    color: var(--brand-primary);
+}
+.vet-appointment-time strong {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+.vet-appointment-body { flex: 1; min-width: 0; }
+.vet-appointment-body strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+}
+.vet-appointment-body span {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    color: var(--c-gray-500);
+    font-size: 13px;
+}
+
+.vet-exam-row, .vet-consult-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    transition: all var(--t-fast);
+}
+.vet-exam-row:hover, .vet-consult-row:hover { border-color: var(--brand-primary); transform: translateY(-1px); box-shadow: var(--sh-sm); }
+.vet-exam-row > div:first-child, .vet-consult-row > div:first-child { flex: 1; }
+.vet-exam-row strong, .vet-consult-row strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: 14px;
+}
+.vet-exam-row span, .vet-consult-row span {
+    font-size: 12px;
+    color: var(--c-gray-500);
+}
+.vet-consult-row svg { color: var(--c-gray-400); }
+
+
+/* ─── Agenda ──────────────────────────────────────────── */
+.agenda-filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.agenda-filters input[type="date"] {
+    padding: 0.55rem 0.85rem;
+    border: 1.5px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    background: var(--c-white);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--c-gray-700);
+}
+.agenda-filters input[type="date"]:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px rgba(115,198,232,0.18);
+}
+
+.agenda-day {
+    margin-bottom: 1.5rem;
+}
+.agenda-day-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: var(--fs-md);
+    color: var(--brand-secondary);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--c-gray-200);
+}
+.agenda-day-count {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-gray-500);
+    background: var(--c-gray-100);
+    padding: 2px 10px;
+    border-radius: var(--r-full);
+}
+
+.agenda-card {
+    display: grid;
+    grid-template-columns: 80px 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    margin-bottom: 0.6rem;
+    transition: border-color var(--t-fast);
+}
+.agenda-card:hover { border-color: var(--brand-primary); }
+.agenda-card-time {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.agenda-card-body {
+    min-width: 0;
+}
+.agenda-card-body strong {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+    display: block;
+    margin-bottom: 2px;
+}
+.agenda-card-body span {
+    font-size: 13px;
+    color: var(--c-gray-500);
+}
+.agenda-card-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+@media (max-width: 700px) {
+    .agenda-card { grid-template-columns: 80px 1fr; }
+    .agenda-card-actions { grid-column: 1 / -1; justify-content: flex-end; }
+}
+
+
+/* ─── Patient list ───────────────────────────────────────── */
+.patient-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.85rem;
+}
+.patient-card {
+    display: flex;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    transition: all var(--t-fast);
+}
+.patient-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); box-shadow: var(--sh-sm); }
+.patient-card-photo {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.patient-card-photo img { width: 100%; height: 100%; object-fit: cover; }
+.patient-card-info { min-width: 0; flex: 1; }
+.patient-card-info strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: var(--fs-md);
+}
+.patient-card-info span {
+    display: block;
+    color: var(--c-gray-500);
+    font-size: 13px;
+    margin-top: 2px;
+}
+.patient-card-info small {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--c-gray-100);
+    border-radius: var(--r-full);
+    font-size: 11px;
+    color: var(--c-gray-600);
+    margin-top: 6px;
+}
+
+
+/* ─── Patient detail ─────────────────────────────────────── */
+.patient-detail-hero {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-xl);
+    margin-bottom: 1.25rem;
+}
+.patient-detail-hero-photo {
+    width: 120px;
+    aspect-ratio: 1;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.patient-detail-hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+.patient-detail-hero h1 { font-size: clamp(1.5rem, 2.5vw, 2rem); margin-bottom: 4px; }
+.patient-detail-hero > div:nth-child(2) > p { color: var(--c-gray-500); font-size: 14px; margin-bottom: 0.75rem; }
+.patient-detail-owner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 4px 10px;
+    background: var(--c-gray-50);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-full);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-gray-700);
+}
+.patient-detail-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-self: flex-start;
+}
+
+@media (max-width: 700px) {
+    .patient-detail-hero { grid-template-columns: 80px 1fr; }
+    .patient-detail-hero-photo { width: 80px; }
+    .patient-detail-actions { grid-column: 1/-1; }
+}
+
+
+/* ─── Forms (consultation, prescription, exam) ─────────── */
+.clinical-form {
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-xl);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.clinical-form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+}
+.clinical-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.clinical-form textarea {
+    min-height: 110px;
+}
+
+
+/* ─── Prescription editor ────────────────────────────── */
+.rx-item {
+    padding: 1rem;
+    background: var(--c-gray-50);
+    border: 1px solid var(--c-gray-100);
+    border-radius: var(--r-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+}
+.rx-item-remove {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    color: var(--c-gray-400);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--t-fast), background var(--t-fast);
+}
+.rx-item-remove:hover { color: var(--c-danger); background: var(--c-danger-soft); }
+.rx-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.6rem;
+}

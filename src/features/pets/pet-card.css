@@ -1,0 +1,106 @@
+.pet-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--c-white);
+    border-radius: var(--r-xl);
+    border: 1px solid var(--c-gray-200);
+    overflow: hidden;
+    transition: box-shadow var(--t-normal), transform var(--t-normal), border-color var(--t-normal);
+}
+.pet-card:hover {
+    box-shadow: var(--sh-lg);
+    transform: translateY(-4px);
+    border-color: var(--brand-primary);
+}
+.pet-card:hover .pet-card-arrow {
+    color: var(--brand-primary);
+    transform: translateX(4px);
+}
+.pet-card:hover .pet-card-cover img { transform: scale(1.04); }
+
+.pet-card-cover {
+    aspect-ratio: 16 / 10;
+    background: var(--brand-primary-soft);
+    position: relative;
+    overflow: hidden;
+}
+.pet-card-cover img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform var(--t-slow);
+}
+.pet-card-cover-empty {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-primary);
+}
+.pet-card-chip {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 0.25rem 0.65rem;
+    background: rgba(255,255,255,0.92);
+    border-radius: var(--r-full);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    backdrop-filter: blur(6px);
+}
+
+.pet-card-body { padding: 1.1rem 1.2rem; }
+
+.pet-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+.pet-card-head strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--brand-secondary);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.pet-card-head span {
+    color: var(--c-gray-500);
+    font-size: var(--fs-sm);
+}
+.pet-card-arrow {
+    color: var(--c-gray-300);
+    transition: color var(--t-fast), transform var(--t-fast);
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.pet-card-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--c-gray-100);
+}
+.pet-card-meta-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--c-gray-400);
+    margin-bottom: 2px;
+}
+.pet-card-meta-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-gray-700);
+}

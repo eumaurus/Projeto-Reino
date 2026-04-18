@@ -1,0 +1,90 @@
+.profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--brand-primary-softer) 0%, white 100%);
+    border: 1px solid var(--brand-primary-soft);
+    border-radius: var(--r-2xl);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.profile-avatar-wrap { position: relative; display: inline-block; }
+.profile-avatar-edit {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 0 3px white;
+    transition: background var(--t-fast);
+}
+.profile-avatar-edit:hover { background: var(--brand-primary-hover); }
+.profile-avatar-spinner {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(15,23,42,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.profile-hero h2 {
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    margin-bottom: 4px;
+}
+.profile-hero p { color: var(--c-gray-500); font-size: 14px; margin-bottom: 0.7rem; }
+.profile-hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.profile-hero-chips span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 4px 10px;
+    background: white;
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-full);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-secondary);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+@media (max-width: 900px) {
+    .profile-grid { grid-template-columns: 1fr; }
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.profile-form h3 {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-family: var(--font-heading);
+    font-size: var(--fs-md);
+    margin-bottom: 2px;
+    color: var(--brand-secondary);
+}
+.profile-form h3 svg { color: var(--brand-primary); }
+.profile-form-hint {
+    color: var(--c-gray-500);
+    font-size: 13px;
+    margin-bottom: 0.5rem;
+}
