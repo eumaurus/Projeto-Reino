@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, ClipboardList, Save, Stethoscope } from 'lucide-react'
+import { ArrowLeft, Save, Stethoscope, Receipt, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { useAsync } from '../../shared/hooks/useAsync'
 import { getPetById } from '../../services/pets.service'
@@ -12,6 +12,8 @@ import FormField from '../../shared/components/ui/FormField'
 import { SkeletonRows } from '../../shared/components/ui/Skeleton'
 import Alert from '../../shared/components/ui/Alert'
 import { useToast } from '../../shared/components/ui/Toast'
+import CheckoutModal from './CheckoutModal'
+import './vet.css'
 
 export default function NewConsultationPage() {
     const { petId } = useParams()
@@ -35,7 +37,10 @@ export default function NewConsultationPage() {
         temperatureC: '',
         heartRate:    '',
     })
-    const [saving, setSaving] = useState(false)
+    const [saving, setSaving]     = useState(false)
+    const [savedConsultationId, setSavedConsultationId] = useState(null)
+    const [checkoutOpen, setCheckoutOpen] = useState(false)
+    const [checkoutSent, setCheckoutSent] = useState(false)
 
     const set = (k) => (e) => setForm(prev => ({ ...prev, [k]: e.target.value }))
 
@@ -46,7 +51,7 @@ export default function NewConsultationPage() {
         }
         setSaving(true)
         try {
-            await createConsultation({
+            const consultation = await createConsultation({
                 petId:        pet.id,
                 ownerId:      pet.ownerId,
                 vetId:        currentUser.id,
@@ -64,13 +69,23 @@ export default function NewConsultationPage() {
             if (bookingId) {
                 try { await updateBookingStatus(bookingId, 'done') } catch { /* mantém mesmo se falhar */ }
             }
+            setSavedConsultationId(consultation.id)
             toast.success('Consulta registrada com sucesso!')
-            navigate(`/vet/patients/${pet.id}`)
+            // Se comanda já foi enviada, fluxo encerrado — navega. Caso contrário fica na tela
+            // para o vet decidir se vai enviar comanda agora.
+            if (checkoutSent) navigate(`/vet/patients/${pet.id}`)
         } catch (err) {
             toast.error(err.message ?? 'Falha ao registrar consulta.')
         } finally {
             setSaving(false)
         }
+    }
+
+    const openCheckout = () => setCheckoutOpen(true)
+
+    const handleCheckoutSent = () => {
+        setCheckoutSent(true)
+        setCheckoutOpen(false)
     }
 
     if (petQuery.loading) return <SkeletonRows rows={6} height={40} />
@@ -88,9 +103,20 @@ export default function NewConsultationPage() {
                 subtitle={`Tutor: ${pet.owner?.name ?? '—'} · ${pet.species} · ${pet.breed ?? 'SRD'}`}
             />
 
-            {bookingId && (
+            {bookingId && !savedConsultationId && (
                 <Alert tone="info">
                     Esta consulta está vinculada a um agendamento. Ao salvar, o agendamento será marcado como <strong>realizado</strong> automaticamente.
+                </Alert>
+            )}
+
+            {(savedConsultationId || checkoutSent) && (
+                <Alert tone="success">
+                    {savedConsultationId && checkoutSent && 'Prontuário salvo e comanda enviada. '}
+                    {savedConsultationId && !checkoutSent && 'Prontuário salvo. Se ainda não enviou a comanda, faça agora. '}
+                    {!savedConsultationId && checkoutSent && 'Comanda enviada para a recepção. Finalize a anamnese quando puder. '}
+                    <Link to={`/vet/patients/${pet.id}`} style={{ fontWeight: 600, marginLeft: 4 }}>
+                        Ir para o paciente →
+                    </Link>
                 </Alert>
             )}
 
@@ -126,10 +152,39 @@ export default function NewConsultationPage() {
                 </FormField>
 
                 <div className="clinical-form-actions">
-                    <Button variant="outline" type="button" onClick={() => navigate(-1)} disabled={saving}>Cancelar</Button>
-                    <Button type="submit" icon={Save} loading={saving}>Salvar prontuário</Button>
+                    <Button variant="outline" type="button" onClick={() => navigate(-1)} disabled={saving}>
+                        {(savedConsultationId || checkoutSent) ? 'Voltar' : 'Cancelar'}
+                    </Button>
+                    <Button
+                        variant={checkoutSent ? 'success' : 'outline'}
+                        type="button"
+                        icon={checkoutSent ? CheckCircle2 : Receipt}
+                        onClick={openCheckout}
+                        disabled={saving || checkoutSent}
+                    >
+                        {checkoutSent ? 'Comanda enviada' : 'Enviar comanda'}
+                    </Button>
+                    <Button
+                        type="submit"
+                        icon={savedConsultationId ? CheckCircle2 : Save}
+                        variant={savedConsultationId ? 'success' : 'primary'}
+                        loading={saving}
+                        disabled={!!savedConsultationId}
+                    >
+                        {savedConsultationId ? 'Prontuário salvo' : 'Salvar prontuário'}
+                    </Button>
                 </div>
             </form>
+
+            <CheckoutModal
+                open={checkoutOpen}
+                onClose={() => setCheckoutOpen(false)}
+                pet={pet}
+                consultationId={savedConsultationId}
+                bookingId={bookingId}
+                seedItems={[{ serviceId: 'consulta', name: 'Consulta Clínica', qty: 1, unitPrice: 180 }]}
+                onSent={handleCheckoutSent}
+            />
         </>
     )
 }

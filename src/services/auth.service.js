@@ -63,6 +63,21 @@ export const changePassword = async (newPassword) => {
     return { ok: true }
 }
 
+export const changePasswordWithVerification = async ({ email, currentPassword, newPassword }) => {
+    if (!email) return { ok: false, message: 'E-mail do usuário não encontrado.' }
+
+    // Verifica a senha atual tentando logar silenciosamente (gera uma nova sessão válida).
+    const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword,
+    })
+    if (verifyError) return { ok: false, message: 'Senha atual incorreta.' }
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) return { ok: false, message: error.message }
+    return { ok: true }
+}
+
 export const updateOwnProfile = async (profileId, fields) => {
     const { error } = await supabase
         .from('profiles')
@@ -76,6 +91,23 @@ export const updateOwnProfile = async (profileId, fields) => {
     if (Object.keys(metaFields).length) {
         await supabase.auth.updateUser({ data: metaFields })
     }
+    return { ok: true }
+}
+
+export const adminForcePasswordChange = async ({ userId, newPassword }) => {
+    const { error } = await supabase.rpc('admin_reset_password', {
+        target_user_id: userId,
+        new_password:   newPassword,
+    })
+    if (error) return { ok: false, message: error.message }
+    return { ok: true }
+}
+
+export const sendPasswordResetEmail = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+    })
+    if (error) return { ok: false, message: error.message }
     return { ok: true }
 }
 

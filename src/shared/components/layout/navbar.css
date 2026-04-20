@@ -8,12 +8,12 @@
 }
 
 .nav-public {
-    background: rgba(255, 255, 255, 0.82);
+    background: color-mix(in srgb, var(--c-white) 82%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
 .nav-public.nav-scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, var(--c-white) 95%, transparent);
     border-color: var(--c-gray-200);
     box-shadow: var(--sh-sm);
 }
@@ -23,6 +23,26 @@
     border-bottom-color: var(--c-gray-100);
 }
 .nav-portal.nav-scrolled { box-shadow: var(--sh-sm); border-bottom-color: var(--c-gray-200); }
+
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-full);
+    color: var(--c-gray-600);
+    background: transparent;
+    border: 1px solid var(--c-gray-200);
+    transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+    cursor: pointer;
+}
+.theme-toggle:hover {
+    background: var(--brand-primary-soft);
+    color: var(--brand-secondary);
+    border-color: var(--brand-primary-soft);
+    transform: rotate(-8deg);
+}
 
 .nav-inner {
     max-width: var(--container-w);

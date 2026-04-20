@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-    Users, Phone, Mail, Trash2, Key, MoreVertical, PawPrint,
+    Users, Phone, Mail, Trash2, Edit3, PawPrint,
     CalendarDays, FileBadge,
 } from 'lucide-react'
+import EditClientModal from './EditClientModal'
+import './admin.css'
 import { useAsync } from '../../shared/hooks/useAsync'
 import { useDebounce } from '../../shared/hooks/useDebounce'
 import { listClients, deleteProfile } from '../../services/profiles.service'
@@ -28,6 +30,7 @@ export default function ClientsPage() {
     const [term, setTerm] = useState('')
     const [toDelete, setToDelete] = useState(null)
     const [deleting, setDeleting] = useState(false)
+    const [editing, setEditing] = useState(null)
     const debounced = useDebounce(term, 200)
 
     const enriched = useMemo(() => {
@@ -117,11 +120,19 @@ export default function ClientsPage() {
                             <span><CalendarDays size={12} style={{ verticalAlign: 'middle' }} /> {c.bookings.length} agendamento(s)</span>
                         </div>
                         <div style={{ display: 'flex', gap: 6 }}>
-                            <Button variant="ghost" size="sm" icon={Trash2} onClick={() => setToDelete(c)} />
+                            <Button variant="outline" size="sm" icon={Edit3} onClick={() => setEditing(c)}>Editar</Button>
+                            <Button variant="ghost" size="sm" icon={Trash2} onClick={() => setToDelete(c)} aria-label="Excluir" />
                         </div>
                     </div>
                 ))}
             </div>
+
+            <EditClientModal
+                open={!!editing}
+                onClose={() => setEditing(null)}
+                client={editing}
+                onSaved={() => { setEditing(null); clients.refetch() }}
+            />
 
             <ConfirmDialog
                 open={!!toDelete}

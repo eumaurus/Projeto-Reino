@@ -14,6 +14,7 @@ import { SkeletonRows } from '../../shared/components/ui/Skeleton'
 import Alert from '../../shared/components/ui/Alert'
 import { useToast } from '../../shared/components/ui/Toast'
 import { EXAM_CATEGORIES, EXAM_SUGGESTIONS } from '../../shared/constants/statuses'
+import './vet.css'
 
 export default function NewExamPage() {
     const { petId } = useParams()

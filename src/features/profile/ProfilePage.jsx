@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { User, Mail, Phone, Lock, Save, ShieldCheck, BadgeCheck, FileBadge, Camera } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
-import { updateOwnProfile, changePassword } from '../../services/auth.service'
+import { updateOwnProfile, changePasswordWithVerification } from '../../services/auth.service'
 import { uploadAvatar } from '../../services/storage.service'
 import PageHeader from '../../shared/components/ui/PageHeader'
 import Button from '../../shared/components/ui/Button'
@@ -75,12 +75,18 @@ export default function ProfilePage() {
 
     const savePassword = async (e) => {
         e.preventDefault()
+        if (!currentPass) return toast.error('Informe sua senha atual.')
         if (newPass.length < 6) return toast.error('Nova senha precisa ter ao menos 6 caracteres.')
         if (newPass !== confirmPass) return toast.error('As senhas não conferem.')
+        if (newPass === currentPass) return toast.error('A nova senha deve ser diferente da atual.')
 
         setSavingPass(true)
         try {
-            const res = await changePassword(newPass)
+            const res = await changePasswordWithVerification({
+                email:          currentUser.email,
+                currentPassword: currentPass,
+                newPassword:    newPass,
+            })
             if (!res.ok) toast.error(res.message ?? 'Falha ao trocar senha.')
             else {
                 toast.success('Senha atualizada.')
@@ -159,13 +165,14 @@ export default function ProfilePage() {
                             Escolha uma senha com pelo menos 6 caracteres. Recomendamos mistura de letras, números e símbolos.
                         </p>
 
-                        <FormField label="Senha atual" icon={Lock} htmlFor="p-current">
+                        <FormField label="Senha atual" icon={Lock} htmlFor="p-current" required>
                             <input
                                 id="p-current"
                                 type="password"
                                 value={currentPass}
                                 onChange={(e) => setCurrentPass(e.target.value)}
                                 autoComplete="current-password"
+                                required
                             />
                         </FormField>
 

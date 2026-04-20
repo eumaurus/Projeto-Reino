@@ -26,10 +26,18 @@ const ICON_MAP = {
 const STEPS = [
     { key: 'pet',      label: 'Pet'      },
     { key: 'service',  label: 'Serviço'  },
-    { key: 'vaccines', label: 'Vacinas', conditional: true },
+    { key: 'variants', label: 'Opções',  conditional: true },
     { key: 'datetime', label: 'Data'     },
     { key: 'review',   label: 'Revisão'  },
 ]
+
+const VARIANT_LABELS = {
+    vacina:   { step: 'Vacinas',   title: 'Quais vacinas vão ser aplicadas?',     hint: 'Selecione uma ou mais opções. A equipe confirma o protocolo no atendimento.' },
+    exame:    { step: 'Exames',    title: 'Quais exames deseja?',                  hint: 'Selecione os exames desejados. A equipe pode sugerir ajustes no atendimento.' },
+    banho:    { step: 'Pacote',    title: 'Qual pacote de banho e tosa?',          hint: 'Escolha o pacote que melhor se encaixa no porte do seu pet.' },
+    cirurgia: { step: 'Cirurgia',  title: 'Qual procedimento cirúrgico?',          hint: 'Selecione o procedimento. A equipe confirma detalhes no pré-operatório.' },
+}
+const DEFAULT_VARIANT_LABEL = { step: 'Opções', title: 'Escolha uma opção', hint: 'Selecione uma ou mais opções disponíveis.' }
 
 export default function BookingFlowPage() {
     const { currentUser } = useAuth()
@@ -62,9 +70,21 @@ export default function BookingFlowPage() {
 
     const pet     = pets.find(p => p.id === petId)
     const service = services.find(s => s.id === serviceId)
-    const isVaccineFlow = serviceId === 'vacina'
 
-    const activeSteps = STEPS.filter(s => !s.conditional || isVaccineFlow)
+    // Variantes vêm primariamente do catálogo (services.options). Fallback: para "vacina",
+    // usa a lista hardcoded por espécie quando o admin ainda não configurou variantes.
+    const availableVariants = (() => {
+        const opts = Array.isArray(service?.options) ? service.options : []
+        if (opts.length > 0) return opts
+        if (service?.id === 'vacina' && pet) return vaccinesBySpecies(pet.species)
+        return []
+    })()
+
+    const hasVariants = availableVariants.length > 0
+    const variantLabels = service ? (VARIANT_LABELS[service.id] ?? DEFAULT_VARIANT_LABEL) : DEFAULT_VARIANT_LABEL
+
+    const activeSteps = STEPS.filter(s => !s.conditional || hasVariants)
+        .map(s => s.key === 'variants' ? { ...s, label: variantLabels.step } : s)
     const currentStep = activeSteps[stepIdx]
 
     const canGoNext = (() => {
@@ -72,7 +92,7 @@ export default function BookingFlowPage() {
         switch (currentStep.key) {
             case 'pet':      return !!petId
             case 'service':  return !!serviceId
-            case 'vaccines': return vaccineIds.length > 0
+            case 'variants': return vaccineIds.length > 0
             case 'datetime': return !!date && !!time
             case 'review':   return true
             default: return false
@@ -82,17 +102,15 @@ export default function BookingFlowPage() {
     const next = () => { if (canGoNext) setStepIdx(i => Math.min(i + 1, activeSteps.length - 1)) }
     const prev = () => setStepIdx(i => Math.max(i - 1, 0))
 
-    const availableVaccines = pet ? vaccinesBySpecies(pet.species) : []
-
     const timeSlots = date ? getAvailableTimeSlots(date) : []
 
     const submit = async () => {
         setSubmitting(true)
         try {
             const selectedVaccines = vaccineIds
-                .map(id => availableVaccines.find(v => v.id === id))
+                .map(id => availableVariants.find(v => v.id === id))
                 .filter(Boolean)
-                .map(v => ({ id: v.id, name: v.name }))
+                .map(v => ({ id: v.id, name: v.name, price: v.price ?? null }))
 
             const booking = await createBooking({
                 ownerId:       currentUser.id,
@@ -236,13 +254,18 @@ export default function BookingFlowPage() {
                 </section>
             )}
 
-            {currentStep?.key === 'vaccines' && (
+            {currentStep?.key === 'variants' && (
                 <section className="booking-step-content">
-                    <h2>Quais vacinas vão ser aplicadas?</h2>
-                    <p className="booking-step-subtitle">Selecione uma ou mais opções. A equipe confirma o protocolo no atendimento.</p>
+                    <h2>{variantLabels.title}</h2>
+                    <p className="booking-step-subtitle">{variantLabels.hint}</p>
                     <div className="booking-vaccine-list">
-                        {availableVaccines.map(v => {
+                        {availableVariants.map(v => {
                             const selected = vaccineIds.includes(v.id)
+                            const subtitle = v.price != null && v.price !== ''
+                                ? `R$ ${Number(v.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                                : v.boosterMonths
+                                    ? `Reforço a cada ${v.boosterMonths === 12 ? '12 meses' : `${v.boosterMonths} meses`}`
+                                    : v.description ?? ''
                             return (
                                 <button
                                     key={v.id}
@@ -255,7 +278,7 @@ export default function BookingFlowPage() {
                                     </div>
                                     <div>
                                         <strong>{v.name}</strong>
-                                        <span>Reforço a cada {v.boosterMonths === 12 ? '12 meses' : `${v.boosterMonths} meses`}</span>
+                                        {subtitle && <span>{subtitle}</span>}
                                     </div>
                                 </button>
                             )
@@ -321,10 +344,10 @@ export default function BookingFlowPage() {
                     <div className="booking-review">
                         <ReviewRow label="Pet" value={`${pet?.name} · ${pet?.species}`} />
                         <ReviewRow label="Serviço" value={service?.name} />
-                        {isVaccineFlow && (
+                        {hasVariants && vaccineIds.length > 0 && (
                             <ReviewRow
-                                label="Vacinas"
-                                value={vaccineIds.map(id => availableVaccines.find(v => v.id === id)?.name).filter(Boolean).join(', ')}
+                                label={variantLabels.step}
+                                value={vaccineIds.map(id => availableVariants.find(v => v.id === id)?.name).filter(Boolean).join(', ')}
                             />
                         )}
                         <ReviewRow label="Data e hora" value={`${formatDate(date)} às ${time}`} />

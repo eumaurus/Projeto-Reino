@@ -39,6 +39,16 @@ export const createExam = async (e) => {
     return rowToExam(data)
 }
 
+export const getExamById = async (id) => {
+    const { data, error } = await supabase
+        .from('exams')
+        .select('*, vet:vet_id (id, name, crmv)')
+        .eq('id', id)
+        .maybeSingle()
+    if (error) throw error
+    return data ? rowToExam(data) : null
+}
+
 export const updateExam = async (id, fields) => {
     const payload = { ...fields }
     if (payload.status === 'completed' && !payload.completed_at) {

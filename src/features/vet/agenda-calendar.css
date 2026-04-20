@@ -99,11 +99,15 @@
     white-space: nowrap;
     font-weight: 600;
 }
-.ev-pending   { background: #fef3c7; color: #92400e; }
-.ev-confirmed { background: #dbeafe; color: #1e40af; }
-.ev-done      { background: #dcfce7; color: #047857; }
+.ev-pending   { background: var(--c-warning-soft); color: #92400e; }
+.ev-confirmed { background: var(--c-info-soft);    color: #1e40af; }
+.ev-done      { background: var(--c-success-soft); color: #047857; }
 .ev-cancelled { background: var(--c-gray-100); color: var(--c-gray-500); text-decoration: line-through; }
 .ev-more      { background: transparent; color: var(--c-gray-500); }
+
+html[data-theme="dark"] .ev-pending   { color: #fcd34d; }
+html[data-theme="dark"] .ev-confirmed { color: #93c5fd; }
+html[data-theme="dark"] .ev-done      { color: #86efac; }
 
 @media (max-width: 700px) {
     .agenda-calendar-grid { grid-auto-rows: minmax(64px, 1fr); }
@@ -148,21 +152,34 @@
     border-radius: var(--r-full);
 }
 .agenda-day-detail-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
     gap: 0.75rem;
-    padding: 0.65rem 0;
+    padding: 0.7rem 0;
     border-bottom: 1px solid var(--c-gray-100);
+    align-items: center;
 }
 .agenda-day-detail-row:last-child { border-bottom: none; }
-.agenda-day-detail-row strong {
+.agenda-day-detail-time {
+    padding: 0.35rem 0.6rem;
+    background: var(--brand-primary-soft);
+    color: var(--brand-secondary);
+    border-radius: var(--r-sm);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+.agenda-day-detail-time strong {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    color: var(--brand-secondary);
+}
+.agenda-day-detail-info strong {
     display: block;
     font-family: var(--font-heading);
     color: var(--brand-secondary);
     font-size: 14px;
 }
-.agenda-day-detail-row span {
-    font-size: 12px;
+.agenda-day-detail-info span {
+    font-size: 12.5px;
     color: var(--c-gray-500);
 }

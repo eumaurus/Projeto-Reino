@@ -3,7 +3,7 @@
     position: relative;
     overflow: hidden;
     padding: clamp(4rem, 8vw, 7rem) 0 clamp(5rem, 10vw, 8rem);
-    background: linear-gradient(135deg, var(--brand-primary-softer) 0%, #ffffff 60%);
+    background: linear-gradient(135deg, var(--brand-primary-softer) 0%, var(--c-white) 60%);
 }
 .hero::before {
     content: '';

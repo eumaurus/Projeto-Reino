@@ -1,0 +1,387 @@
+/* ═══════════════════════════ PATIENT DETAIL TABS ═══════════════════════════ */
+
+/* Mini hero para páginas de detalhe (consulta/receita/exame) */
+.pd-mini-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 0 1rem;
+    margin-bottom: 0.5rem;
+}
+.pd-mini-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    margin-bottom: 4px;
+}
+.pd-mini-hero-meta {
+    color: var(--c-gray-500);
+    font-size: 13px;
+}
+
+.pd-filter-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--c-gray-50);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+}
+.pd-filter-count {
+    font-size: 12px;
+    color: var(--c-gray-500);
+    font-weight: 600;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+}
+.pd-filter-count strong {
+    color: var(--brand-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ─── Card de consulta ────────────────────────────────────── */
+.pd-consultation {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    margin-bottom: 1rem;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.pd-consultation:hover {
+    border-color: var(--brand-primary);
+    box-shadow: var(--sh-sm);
+}
+
+/* link variant: card inteiro clicável */
+.pd-consultation-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+.pd-consultation-link:hover {
+    transform: translateY(-1px);
+}
+
+.pd-open-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--c-gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity var(--t-fast), color var(--t-fast);
+    flex-shrink: 0;
+}
+.pd-consultation-link:hover .pd-open-hint {
+    opacity: 1;
+    color: var(--brand-primary);
+}
+
+.pd-date-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.4rem;
+    background: var(--brand-primary-soft);
+    border-radius: var(--r-md);
+    text-align: center;
+    height: fit-content;
+}
+.pd-date-pill-day {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--brand-secondary);
+    line-height: 1;
+}
+.pd-date-pill-month {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brand-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+}
+.pd-date-pill-year {
+    font-size: 11px;
+    color: var(--c-gray-500);
+    margin-top: 2px;
+}
+.pd-date-pill-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-gray-600);
+    margin-top: 4px;
+}
+
+.pd-body {
+    min-width: 0;
+}
+.pd-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+.pd-head-title {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+.pd-head-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 4px;
+    color: var(--c-gray-500);
+    font-size: 12.5px;
+}
+.pd-head-vet {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--brand-primary);
+    font-weight: 600;
+}
+
+.pd-vitals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.6rem;
+}
+.pd-vital-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    background: var(--c-gray-50);
+    border: 1px solid var(--c-gray-200);
+    border-radius: 999px;
+    color: var(--c-gray-700);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.pd-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 0.5rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--c-gray-200);
+}
+.pd-section {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+}
+.pd-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-gray-400);
+    padding-top: 2px;
+}
+.pd-section-text {
+    color: var(--c-gray-700);
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+/* ─── Vacinas (timeline leve) ─────────────────────────────── */
+.pd-vaccine {
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+    margin-bottom: 0.6rem;
+    transition: border-color var(--t-fast);
+}
+.pd-vaccine:hover { border-color: var(--brand-primary); }
+
+.pd-vaccine-clickable {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    color: inherit;
+}
+.pd-vaccine-clickable:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--sh-sm);
+}
+.pd-vaccine-clickable:hover .pd-open-hint {
+    opacity: 1;
+    color: var(--brand-primary);
+}
+.pd-vaccine-info strong {
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: 15px;
+    display: block;
+    margin-bottom: 4px;
+}
+.pd-vaccine-info-meta {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    color: var(--c-gray-500);
+    font-size: 12.5px;
+}
+.pd-vaccine-info-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.pd-vaccine-info-meta strong {
+    display: inline;
+    color: var(--c-gray-700);
+    font-size: 12.5px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ─── Receitas ────────────────────────────────────────────── */
+.pd-prescription {
+    padding: 1rem 1.25rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    margin-bottom: 1rem;
+    transition: border-color var(--t-fast);
+}
+.pd-prescription:hover { border-color: var(--brand-primary); }
+
+.pd-prescription-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+}
+.pd-prescription-item {
+    padding: 0.75rem 1rem;
+    background: var(--c-gray-50);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-md);
+}
+.pd-prescription-item strong {
+    display: block;
+    font-family: var(--font-heading);
+    color: var(--brand-secondary);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+.pd-prescription-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    font-size: 12.5px;
+    color: var(--c-gray-600);
+}
+.pd-prescription-item-meta em {
+    color: var(--brand-secondary);
+    font-weight: 600;
+    font-style: normal;
+}
+.pd-prescription-item p {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--c-gray-600);
+}
+
+/* ─── Exames ──────────────────────────────────────────────── */
+.pd-exam {
+    padding: 1rem 1.25rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+    margin-bottom: 1rem;
+    transition: border-color var(--t-fast);
+}
+.pd-exam:hover { border-color: var(--brand-primary); }
+
+/* ─── Info grid ───────────────────────────────────────────── */
+.pd-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--c-white);
+    border: 1px solid var(--c-gray-200);
+    border-radius: var(--r-lg);
+}
+.pd-info-item-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-gray-400);
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.pd-info-item-value {
+    color: var(--c-gray-800);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .pd-consultation {
+        grid-template-columns: 1fr;
+    }
+    .pd-date-pill {
+        flex-direction: row;
+        gap: 0.6rem;
+        padding: 0.45rem 0.75rem;
+        justify-content: flex-start;
+        align-items: baseline;
+        width: fit-content;
+    }
+    .pd-date-pill-day {
+        font-size: 18px;
+    }
+    .pd-section {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+    .pd-vaccine {
+        grid-template-columns: 1fr;
+    }
+    .pd-filter-bar {
+        grid-template-columns: 1fr;
+    }
+    .pd-filter-count {
+        padding: 0;
+    }
+}
