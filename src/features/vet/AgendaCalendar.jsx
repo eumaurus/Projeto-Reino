@@ -116,24 +116,37 @@ export default function AgendaCalendar({ bookings, onPickDate, selectedDate }) {
     )
 }
 
+// eslint-disable-next-line no-unused-vars
 export function DayDetail({ date, bookings, onAction }) {
     if (!date) return null
     const iso = toISODate(date)
-    const list = bookings.filter(b => b.requestedDate === iso)
+    const list = bookings
+        .filter(b => b.requestedDate === iso)
+        .sort((a, b) => (a.requestedTime || '').localeCompare(b.requestedTime || ''))
     return (
         <div className="agenda-day-detail">
             <h3>
                 <Calendar size={16} /> {weekdayName(date, true)}, {date.getDate().toString().padStart(2,'0')}/{(date.getMonth()+1).toString().padStart(2,'0')}/{date.getFullYear()}
-                <span>{list.length} agendamento(s)</span>
+                <span>{list.length} {list.length === 1 ? 'agendamento' : 'agendamentos'}</span>
             </h3>
             {list.length === 0 && (
-                <p className="text-muted text-small">Nenhum compromisso neste dia.</p>
+                <p style={{ color: 'var(--c-gray-500)', fontSize: 13, padding: '0.5rem 0' }}>
+                    Nenhum compromisso neste dia. Clique em outro dia para ver as atividades.
+                </p>
             )}
             {list.map(b => (
                 <div key={b.id} className="agenda-day-detail-row">
-                    <div>
-                        <strong>{formatTime(b.requestedTime)} · {b.service}</strong>
-                        <span>{b.pet?.name} · {b.owner?.name}</span>
+                    <div className="agenda-day-detail-time">
+                        <strong>{formatTime(b.requestedTime)}</strong>
+                    </div>
+                    <div className="agenda-day-detail-info">
+                        <strong>{b.service}</strong>
+                        <span>{b.pet?.name ?? '—'} · {b.owner?.name ?? '—'}</span>
+                        {b.notes && (
+                            <span style={{ display: 'block', marginTop: 2, fontStyle: 'italic', fontSize: 11 }}>
+                                "{b.notes}"
+                            </span>
+                        )}
                     </div>
                     <StatusBadge value={b.status} map={BOOKING_STATUS} />
                 </div>

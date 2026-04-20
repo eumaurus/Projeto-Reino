@@ -32,6 +32,28 @@ export const createPrescription = async (p) => {
     return rowToPrescription(data)
 }
 
+export const getPrescriptionById = async (id) => {
+    const { data, error } = await supabase
+        .from('prescriptions')
+        .select('*, vet:vet_id (id, name, crmv)')
+        .eq('id', id)
+        .maybeSingle()
+    if (error) throw error
+    return data ? rowToPrescription(data) : null
+}
+
+export const updatePrescription = async (id, fields) => {
+    const payload = {}
+    if (fields.items        !== undefined) payload.items        = fields.items
+    if (fields.instructions !== undefined) payload.instructions = fields.instructions
+    if (fields.validUntil   !== undefined) payload.valid_until  = fields.validUntil
+    const { error } = await supabase
+        .from('prescriptions')
+        .update(payload)
+        .eq('id', id)
+    if (error) throw error
+}
+
 export const listPrescriptionsByPet = async (petId) => {
     const { data, error } = await supabase
         .from('prescriptions')

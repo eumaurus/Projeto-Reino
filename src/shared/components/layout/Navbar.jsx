@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
     Menu, X, PawPrint, Phone, User, ChevronDown, LogOut, Settings,
     CalendarDays, Home, LayoutDashboard, Stethoscope, Users,
-    ShieldCheck, Briefcase, Moon, Sun,
+    ShieldCheck, Briefcase, Moon, Sun, Receipt,
 } from 'lucide-react'
 import { useAuth } from '../../../features/auth/AuthContext'
 import { CLINIC } from '../../constants/clinic'
@@ -24,17 +24,22 @@ const PUBLIC_LINKS = [
 
 const linksForRole = (role) => {
     if (role === ROLE.ADMIN) return [
-        { to: '/admin',           label: 'Dashboard',  icon: LayoutDashboard },
-        { to: '/vet/agenda',      label: 'Agenda',     icon: CalendarDays    },
-        { to: '/vet/patients',    label: 'Pacientes',  icon: Stethoscope     },
-        { to: '/admin/clients',   label: 'Clientes',   icon: Users           },
-        { to: '/admin/services',  label: 'Serviços',   icon: Briefcase       },
-        { to: '/admin/staff',     label: 'Equipe',     icon: ShieldCheck     },
+        { to: '/admin',                label: 'Dashboard',  icon: LayoutDashboard },
+        { to: '/vet/agenda',           label: 'Agenda',     icon: CalendarDays    },
+        { to: '/vet/patients',         label: 'Pacientes',  icon: Stethoscope     },
+        { to: '/reception/checkouts',  label: 'Comandas',   icon: Receipt         },
+        { to: '/admin/clients',        label: 'Clientes',   icon: Users           },
+        { to: '/admin/services',       label: 'Serviços',   icon: Briefcase       },
+        { to: '/admin/staff',          label: 'Equipe',     icon: ShieldCheck     },
     ]
     if (role === ROLE.VET) return [
         { to: '/vet',             label: 'Dashboard',  icon: LayoutDashboard },
         { to: '/vet/agenda',      label: 'Agenda',     icon: CalendarDays    },
         { to: '/vet/patients',    label: 'Pacientes',  icon: Stethoscope     },
+    ]
+    if (role === ROLE.RECEPTION) return [
+        { to: '/reception/checkouts', label: 'Comandas', icon: Receipt      },
+        { to: '/vet/agenda',          label: 'Agenda',   icon: CalendarDays },
     ]
     return [
         { to: '/dashboard',  label: 'Início',       icon: Home          },
@@ -119,6 +124,16 @@ export default function Navbar({ variant = 'auto' }) {
                 </nav>
 
                 <div className="nav-actions">
+                    <button
+                        type="button"
+                        className="theme-toggle"
+                        onClick={toggleTheme}
+                        aria-label={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+                        title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+                    >
+                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    </button>
+
                     {mode === 'public' && (
                         <>
                             <a href={`tel:${CLINIC.phone.replace(/\D/g,'')}`} className="nav-phone hide-mobile">
@@ -170,10 +185,6 @@ export default function Navbar({ variant = 'auto' }) {
                                         </button>
                                         <button className="dd-menu-item" onClick={() => { setUserMenu(false); navigate('/profile#password') }}>
                                             <Settings size={15} /> Segurança e senha
-                                        </button>
-                                        <button className="dd-menu-item" onClick={toggleTheme}>
-                                            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-                                            Tema {theme === 'dark' ? 'claro' : 'escuro'}
                                         </button>
                                         {isStaff(currentUser) && (
                                             <button className="dd-menu-item" onClick={() => { setUserMenu(false); navigate('/') }}>

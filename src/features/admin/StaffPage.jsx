@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
-import { ShieldCheck, Plus, Trash2, Mail, Phone, BadgeCheck } from 'lucide-react'
+import { useState } from 'react'
+import { ShieldCheck, Plus, Trash2, Mail, Phone, BadgeCheck, Edit3 } from 'lucide-react'
+import EditStaffModal from './EditStaffModal'
 import { useAsync } from '../../shared/hooks/useAsync'
 import {
     listStaff,
     deleteProfile,
-    updateProfile,
 } from '../../services/profiles.service'
 import { adminCreateUser } from '../../services/auth.service'
 import PageHeader from '../../shared/components/ui/PageHeader'
@@ -19,11 +19,13 @@ import { SkeletonRows } from '../../shared/components/ui/Skeleton'
 import EmptyState from '../../shared/components/ui/EmptyState'
 import { maskDocument, maskPhone, onlyDigits, formatDocument } from '../../shared/utils/masks'
 import { isValidDocument, isValidEmail, isValidPhone } from '../../shared/utils/validation'
+import './admin.css'
 
 export default function StaffPage() {
     const toast = useToast()
     const staff = useAsync(() => listStaff(), [])
     const [createOpen, setCreateOpen] = useState(false)
+    const [editing,    setEditing]    = useState(null)
     const [toDelete,   setToDelete]   = useState(null)
     const [deleting,   setDeleting]   = useState(false)
 
@@ -42,14 +44,10 @@ export default function StaffPage() {
         }
     }
 
-    const toggleRole = async (person, role) => {
-        try {
-            await updateProfile(person.id, { role })
-            toast.success(`Papel atualizado para ${role === 'admin' ? 'Administrador' : 'Veterinário'}.`)
-            staff.refetch()
-        } catch (e) {
-            toast.error(e.message)
-        }
+    const roleLabelShort = {
+        admin:     'Administrador(a)',
+        vet:       'Veterinário(a)',
+        reception: 'Recepção',
     }
 
     return (
@@ -80,15 +78,13 @@ export default function StaffPage() {
                             {p.document && <span>{formatDocument(p.document)}</span>}
                         </div>
                         <div>
-                            <Badge tone={p.role === 'admin' ? 'brand' : 'info'}>
-                                {p.role === 'admin' ? 'Administrador(a)' : 'Veterinário(a)'}
+                            <Badge tone={p.role === 'admin' ? 'brand' : p.role === 'reception' ? 'warning' : 'info'}>
+                                {roleLabelShort[p.role] ?? p.role}
                             </Badge>
                         </div>
                         <div style={{ display: 'flex', gap: 6 }}>
-                            <Button variant="outline" size="sm" onClick={() => toggleRole(p, p.role === 'admin' ? 'vet' : 'admin')}>
-                                Tornar {p.role === 'admin' ? 'vet' : 'admin'}
-                            </Button>
-                            <Button variant="ghost" size="sm" icon={Trash2} onClick={() => setToDelete(p)} />
+                            <Button variant="outline" size="sm" icon={Edit3} onClick={() => setEditing(p)}>Editar</Button>
+                            <Button variant="ghost" size="sm" icon={Trash2} onClick={() => setToDelete(p)} aria-label="Excluir" />
                         </div>
                     </div>
                 ))}
@@ -98,6 +94,13 @@ export default function StaffPage() {
                 open={createOpen}
                 onClose={() => setCreateOpen(false)}
                 onCreated={() => { setCreateOpen(false); staff.refetch(); toast.success('Colaborador adicionado.') }}
+            />
+
+            <EditStaffModal
+                open={!!editing}
+                onClose={() => setEditing(null)}
+                staff={editing}
+                onSaved={() => { setEditing(null); staff.refetch() }}
             />
 
             <ConfirmDialog
@@ -131,7 +134,7 @@ function CreateStaffModal({ open, onClose, onCreated }) {
         e.preventDefault()
         if (form.name.trim().length < 3)        return toast.error('Informe o nome completo.')
         if (!isValidDocument(form.document))    return toast.error('Documento inválido.')
-        if (!isValidEmail(form.email))          return toast.error('E-mail inválido.')
+        if (!isValidEmail(form.email))          return toast.error('E-mail inválido. Use apenas letras sem acento (ex.: recepcao, não recepção).')
         if (!isValidPhone(form.phone))          return toast.error('Telefone inválido.')
         if (form.password.length < 6)           return toast.error('Senha precisa ter ao menos 6 caracteres.')
 
@@ -176,8 +179,9 @@ function CreateStaffModal({ open, onClose, onCreated }) {
                             value={form.role}
                             onChange={set('role')}
                             options={[
-                                { value: 'vet',   label: 'Veterinário(a)'   },
-                                { value: 'admin', label: 'Administrador(a)' },
+                                { value: 'vet',       label: 'Veterinário(a)'   },
+                                { value: 'admin',     label: 'Administrador(a)' },
+                                { value: 'reception', label: 'Recepção'         },
                             ]}
                         />
                     </FormField>

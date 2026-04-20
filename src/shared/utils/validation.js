@@ -1,6 +1,8 @@
 import { onlyDigits } from './masks'
 
-export const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v ?? '').trim())
+// ASCII-only e-mail — Supabase rejeita caracteres não-ASCII (ç, acentos, etc.)
+export const isValidEmail = (v) => /^[\x20-\x7F]+$/.test(String(v ?? '').trim())
+    && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v ?? '').trim())
 
 export const isValidCPF = (raw) => {
     const cpf = onlyDigits(raw)

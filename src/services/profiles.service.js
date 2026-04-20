@@ -13,7 +13,7 @@ export const listStaff = async () => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .in('role', ['admin', 'vet'])
+        .in('role', ['admin', 'vet', 'reception'])
         .order('name')
     if (error) throw error
     return data ?? []

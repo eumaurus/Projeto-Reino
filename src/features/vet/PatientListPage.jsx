@@ -10,6 +10,7 @@ import EmptyState from '../../shared/components/ui/EmptyState'
 import { SkeletonRows } from '../../shared/components/ui/Skeleton'
 import Button from '../../shared/components/ui/Button'
 import CreatePetModal from './CreatePetModal'
+import './vet.css'
 
 const speciesIcon = (s) => {
     const v = (s ?? '').toLowerCase()

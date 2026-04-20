@@ -2,11 +2,15 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
     CalendarDays, Filter, CheckCircle2, XCircle, ClipboardList, PawPrint, Phone,
-    List, LayoutGrid,
+    List, LayoutGrid, Receipt,
 } from 'lucide-react'
 import AgendaCalendar, { DayDetail } from './AgendaCalendar'
 import { useAsync } from '../../shared/hooks/useAsync'
 import { listAllBookings, updateBookingStatus } from '../../services/bookings.service'
+import { listCheckoutsByBooking } from '../../services/checkouts.service'
+import { formatBRL } from '../../shared/utils/formatters'
+import './vet.css'
+import './checkout.css'
 import PageHeader from '../../shared/components/ui/PageHeader'
 import Tabs from '../../shared/components/ui/Tabs'
 import Button from '../../shared/components/ui/Button'
@@ -21,8 +25,8 @@ import { formatDate, formatTime, weekdayName, todayISO, toISODate, addDays } fro
 export default function VetAgendaPage() {
     const toast = useToast()
     const [view, setView] = useState('list') // 'list' | 'calendar'
-    const [selectedDay, setSelectedDay] = useState(null)
-    const [tab, setTab] = useState('pending')
+    const [selectedDay, setSelectedDay] = useState(new Date())
+    const [tab, setTab] = useState('all')
     const [from, setFrom] = useState(todayISO())
     const [to,   setTo]   = useState(toISODate(addDays(new Date(), 30)))
     const [cancelling, setCancelling] = useState(null)
@@ -30,6 +34,19 @@ export default function VetAgendaPage() {
 
     const query = useAsync(() => listAllBookings({ from, to }), [from, to])
     const bookings = query.data ?? []
+
+    const bookingIds = useMemo(() => bookings.map(b => b.id), [bookings])
+    const checkoutsQuery = useAsync(
+        () => (bookingIds.length ? listCheckoutsByBooking(bookingIds) : Promise.resolve([])),
+        [bookingIds.join(',')],
+    )
+    const checkoutByBooking = useMemo(() => {
+        const map = new Map()
+        for (const c of (checkoutsQuery.data ?? [])) {
+            if (c.booking_id) map.set(c.booking_id, c)
+        }
+        return map
+    }, [checkoutsQuery.data])
 
     const groups = useMemo(() => {
         const grouped = new Map()
@@ -137,9 +154,10 @@ export default function VetAgendaPage() {
                 value={tab}
                 onChange={setTab}
                 items={[
-                    { value: 'pending',   label: 'Pendentes',   count: counts.pending },
+                    { value: 'all',       label: 'Todos',       count: counts.all       },
+                    { value: 'pending',   label: 'Pendentes',   count: counts.pending   },
                     { value: 'confirmed', label: 'Confirmados', count: counts.confirmed },
-                    { value: 'done',      label: 'Realizados',  count: counts.done },
+                    { value: 'done',      label: 'Realizados',  count: counts.done      },
                     { value: 'cancelled', label: 'Cancelados',  count: counts.cancelled },
                 ]}
             />
@@ -188,8 +206,13 @@ export default function VetAgendaPage() {
                                             <Phone size={12} /> {b.owner.phone}
                                         </a>
                                     )}
-                                    <div style={{ marginTop: 4 }}>
+                                    <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
                                         <StatusBadge value={b.status} map={BOOKING_STATUS} />
+                                        {checkoutByBooking.get(b.id)?.status === 'pending' && (
+                                            <span className="checkout-pending-chip">
+                                                <Receipt size={11} /> Aguardando pagto · {formatBRL(checkoutByBooking.get(b.id).total)}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
 

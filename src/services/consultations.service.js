@@ -49,6 +49,16 @@ export const createConsultation = async (consultation) => {
     return rowToConsultation(data)
 }
 
+export const getConsultationById = async (id) => {
+    const { data, error } = await supabase
+        .from('consultations')
+        .select('*, vet:vet_id (id, name, crmv), pets:pet_id (id, name, species, breed, image, owner_id)')
+        .eq('id', id)
+        .maybeSingle()
+    if (error) throw error
+    return data ? rowToConsultation(data) : null
+}
+
 export const updateConsultation = async (id, fields) => {
     const row = consultationToRow(fields)
     delete row.pet_id

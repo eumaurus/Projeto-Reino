@@ -11,6 +11,8 @@
     "preview": "vite preview",
     "setup-db": "node --env-file=.env setup-db.mjs",
     "seed": "node --env-file=.env seed.mjs",
+    "seed:reception": "node --env-file=.env seed-reception.mjs",
+    "migrate": "node --env-file=.env apply-migrations.mjs",
     "seed:local": "node --env-file=.env.docker seed.mjs",
     "local:start": "npx supabase start",
     "local:stop": "npx supabase stop",

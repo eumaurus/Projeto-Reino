@@ -5,6 +5,21 @@ export const BOOKING_STATUS = {
     cancelled: { label: 'Cancelado',              tone: 'muted'   },
 }
 
+export const CHECKOUT_STATUS = {
+    pending:   { label: 'Aguardando pagamento', tone: 'warning' },
+    paid:      { label: 'Pago',                  tone: 'success' },
+    cancelled: { label: 'Cancelado',             tone: 'muted'   },
+}
+
+export const PAYMENT_METHODS = [
+    { value: 'pix',      label: 'PIX' },
+    { value: 'debit',    label: 'Cartão de débito' },
+    { value: 'credit',   label: 'Cartão de crédito' },
+    { value: 'cash',     label: 'Dinheiro' },
+    { value: 'transfer', label: 'Transferência' },
+    { value: 'other',    label: 'Outro' },
+]
+
 export const EXAM_STATUS = {
     requested:    { label: 'Solicitado',     tone: 'info'    },
     in_progress:  { label: 'Em andamento',   tone: 'warning' },

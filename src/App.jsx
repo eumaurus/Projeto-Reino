@@ -42,6 +42,9 @@ const VetAgendaPage       = lazy(() => import('./features/vet/VetAgendaPage'))
 const PatientListPage     = lazy(() => import('./features/vet/PatientListPage'))
 const PatientDetailPage   = lazy(() => import('./features/vet/PatientDetailPage'))
 const NewConsultationPage = lazy(() => import('./features/vet/NewConsultationPage'))
+const ConsultationDetailPage = lazy(() => import('./features/vet/ConsultationDetailPage'))
+const PrescriptionDetailPage = lazy(() => import('./features/vet/PrescriptionDetailPage'))
+const ExamDetailPage = lazy(() => import('./features/vet/ExamDetailPage'))
 const NewPrescriptionPage = lazy(() => import('./features/vet/NewPrescriptionPage'))
 const NewExamPage         = lazy(() => import('./features/vet/NewExamPage'))
 
@@ -50,6 +53,9 @@ const AdminDashboard = lazy(() => import('./features/admin/AdminDashboard'))
 const ClientsPage    = lazy(() => import('./features/admin/ClientsPage'))
 const StaffPage      = lazy(() => import('./features/admin/StaffPage'))
 const ServicesPage   = lazy(() => import('./features/admin/ServicesPage'))
+
+// Reception
+const ReceptionCheckoutsPage = lazy(() => import('./features/reception/ReceptionCheckoutsPage'))
 
 export default function App() {
     return (
@@ -79,8 +85,11 @@ export default function App() {
                                     <Route path="/vet/patients"       element={<PatientListPage />} />
                                     <Route path="/vet/patients/:id"   element={<PatientDetailPage />} />
                                     <Route path="/vet/patients/:petId/consultations/new" element={<NewConsultationPage />} />
+                                    <Route path="/vet/patients/:petId/consultations/:consultationId" element={<ConsultationDetailPage />} />
                                     <Route path="/vet/patients/:petId/prescriptions/new" element={<NewPrescriptionPage />} />
+                                    <Route path="/vet/patients/:petId/prescriptions/:prescriptionId" element={<PrescriptionDetailPage />} />
                                     <Route path="/vet/patients/:petId/exams/new"         element={<NewExamPage />} />
+                                    <Route path="/vet/patients/:petId/exams/:examId"     element={<ExamDetailPage />} />
                                 </Route>
 
                                 {/* Admin-only routes */}
@@ -89,6 +98,12 @@ export default function App() {
                                     <Route path="/admin/clients"   element={<ClientsPage />} />
                                     <Route path="/admin/staff"     element={<StaffPage />} />
                                     <Route path="/admin/services"  element={<ServicesPage />} />
+                                </Route>
+
+                                {/* Reception (+ Admin) */}
+                                <Route element={<PortalLayout roles={[ROLE.RECEPTION, ROLE.ADMIN]} />}>
+                                    <Route path="/reception"            element={<ReceptionCheckoutsPage />} />
+                                    <Route path="/reception/checkouts"  element={<ReceptionCheckoutsPage />} />
                                 </Route>
 
                                 <Route path="*" element={<NotFoundPage />} />

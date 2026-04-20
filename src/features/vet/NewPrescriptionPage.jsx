@@ -11,6 +11,7 @@ import FormField from '../../shared/components/ui/FormField'
 import { SkeletonRows } from '../../shared/components/ui/Skeleton'
 import Alert from '../../shared/components/ui/Alert'
 import { useToast } from '../../shared/components/ui/Toast'
+import './vet.css'
 
 const EMPTY_ITEM = { name: '', dosage: '', frequency: '', duration: '', notes: '' }
 
